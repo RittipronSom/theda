@@ -12,9 +12,8 @@ import Reveal from "@/components/Reveal";
 import Marquee from "@/components/Marquee";
 import { getProductBySlug, getProductIngredients, getRoutineSteps, getProducts } from "@/lib/queries";
 
-export function generateStaticParams() {
-  return getProducts().map((p) => ({ slug: p.slug }));
-}
+// Render on each request so admin edits to products show up immediately.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

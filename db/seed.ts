@@ -27,13 +27,17 @@ async function main() {
       id INTEGER PRIMARY KEY AUTOINCREMENT,
       slug TEXT NOT NULL UNIQUE,
       name TEXT NOT NULL,
+      name_en TEXT,
       badge TEXT,
+      category TEXT NOT NULL DEFAULT 'skincare',
       size TEXT NOT NULL,
       price INTEGER NOT NULL,
+      stock INTEGER NOT NULL DEFAULT 0,
       short_desc TEXT NOT NULL,
       long_desc TEXT NOT NULL,
       suitable_for TEXT NOT NULL,
       image TEXT,
+      tiktok_url TEXT,
       sort_order INTEGER NOT NULL DEFAULT 0
     )
   `);

@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: theda
+    runtime: node
+    plan: starter            # persistent disk needs a paid plan
+    region: singapore
+    buildCommand: npm ci && DATA_DIR=./data node scripts/init-db.mjs && DATA_DIR=./data npm run build
+    startCommand: node scripts/init-db.mjs && npm run start
+    healthCheckPath: /
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: DATA_DIR
+        value: /var/data
+      - key: ADMIN_PASSWORD
+        sync: false          # set in the Render dashboard, never committed
+    disk:
+      name: theda-data
+      mountPath: /var/data
+      sizeGB: 1

@@ -2,7 +2,8 @@ import { createRequire } from "node:module";
 const require = createRequire(import.meta.url);
 const Database = require("better-sqlite3");
 const bcrypt = require("bcryptjs");
-const db = new Database("data/theda.db");
+const { join } = require("node:path");
+const db = new Database(join(process.env.DATA_DIR || "data", "theda.db"));
 db.pragma("journal_mode = WAL");
 
 db.exec(`
@@ -62,7 +63,8 @@ db.prepare("UPDATE products SET stock = 50 WHERE stock = 0").run();
 
 // admin user
 const adminPhone = "0800000000";
-const adminHash = bcrypt.hashSync("thedaAdmin#2026", 10);
+const adminPassword = process.env.ADMIN_PASSWORD || "thedaAdmin#2026";
+const adminHash = bcrypt.hashSync(adminPassword, 10);
 const existing = db.prepare("SELECT id FROM users WHERE phone = ?").get(adminPhone);
 if (!existing) {
   db.prepare("INSERT INTO users (phone, password_hash, name, role, created_at) VALUES (?, ?, ?, 'admin', ?)")
@@ -79,5 +81,5 @@ set("bank_accounts", JSON.stringify([
 ]));
 
 console.log("commerce tables ready");
-console.log("admin login: phone 0800000000 / password thedaAdmin#2026");
+console.log("admin login: phone 0800000000" + (process.env.ADMIN_PASSWORD ? " (password from ADMIN_PASSWORD)" : " / password thedaAdmin#2026"));
 db.close();
